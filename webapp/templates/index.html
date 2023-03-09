@@ -59,38 +59,38 @@
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                     {% for product in products %}
                     <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            {% static "" as baseUrl %}
-                            <img src="{{ baseUrl }}assets/images/{{product.product_id}}.jpg"></img>
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">{{product.product_name}}</h5>
-                                    <!-- Product price-->
-                                    {%if product.promotion > 0 %}
-                                    <p><b class="fw-bolder" style="color:Tomato;"> Promotion </b><br>
-                                    <s class="">£{{product.price|floatformat:2}}</s> £{{product.promotion|floatformat:2}}
-                                    {%else%}
-                                    £{{product.price|floatformat:2}}
-                                    {% endif %}
-                                    <!-- Product Stock-->
-                                    <div>
-                                        <b class="fw-bolder">Available items</b>
-                                        <p class="">{{product.stock_amount}}</p>
-                                    </div>
-                                    <div>
-                                        <p class="">Quantity</p>
-                                        <p><input type="number" min="0" max='{{product.stock_amount}}'/></p>
+                        <form action="{% url 'add_item' product.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="card h-100">
+                                <!-- Product image-->
+                                {% static "" as baseUrl %}
+                                <img src="{{ baseUrl }}assets/images/{{product.id}}.jpg"></img>
+                                <!-- Product details-->
+                                <div class="card-body p-4">
+                                    <div class="text-center">
+                                        <!-- Product name-->
+                                        <h5 class="fw-bolder">{{product.product_name}}</h5>
+                                        <!-- Product price-->
+                                        {%if product.promotion > 0 %}
+                                        <p><b class="fw-bolder" style="color:Tomato;"> Promotion </b><br>
+                                        <s class="">£{{product.price|floatformat:2}}</s> £{{product.promotion|floatformat:2}}
+                                        {%else%}
+                                        £{{product.price|floatformat:2}}
+                                        {% endif %}
+                                        <!-- Product Stock-->
+                                        <div>
+                                            <b class="fw-bolder">Available items</b>
+                                            <p class="">{{product.stock_amount}}</p>
+                                        </div>
+                                        <div>
+                                            <p>Quantity</p>
+                                            <p><input id="quantity_input_id" name="quantity_input" type="number" min="0" max='{{product.stock_amount}}'/></p>
+                                            <p><input class="btn btn-outline-dark mt-auto" type="submit" value="Add To Basket"></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add To Basket</a></div>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                     {% endfor %}
                 </div>

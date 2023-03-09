@@ -1,9 +1,9 @@
 from django.db import models
+from django.utils import timezone
 
 
 # Create your models here.
 class ProductType(models.Model):
-    product_type_id = models.BigAutoField(primary_key=True)
     product_type = models.CharField(max_length=150)
 
     class Meta:
@@ -11,7 +11,6 @@ class ProductType(models.Model):
 
 
 class Product(models.Model):
-    product_id = models.BigAutoField(primary_key=True)
     product_name = models.CharField(max_length=150)
     product_type = models.ForeignKey(ProductType, on_delete=models.DO_NOTHING)
     stock_amount = models.IntegerField()
@@ -22,23 +21,33 @@ class Product(models.Model):
         db_table = "product"
 
 
+class User(models.Model):
+    user_name = models.CharField(max_length=30)
+    created_at = models.DateTimeField()
+
+    class Meta:
+        db_table = "user"
+
+
 class Basket(models.Model):
-    basket_id = models.BigAutoField(primary_key=True)
-    basket_status = models.CharField(max_length=150)
-    timestamp = models.DateTimeField()
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    basket_status = models.CharField(max_length=30)
+    created_time = models.DateTimeField()
+    expiry_time = models.DateTimeField()
+
+    def is_expired(self):
+        if timezone.now() > self.expiry_time:
+            return True
+        return False
 
     class Meta:
         db_table = "basket"
 
 
 class BasketItem(models.Model):
-    basket_item_id = models.BigAutoField(primary_key=True)
-    basket_id = models.ForeignKey(Basket, on_delete=models.CASCADE)
-    product_id = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    basket = models.ForeignKey(Basket, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     quantity = models.IntegerField()
 
     class Meta:
         db_table = "basket_item"
-
-
-
