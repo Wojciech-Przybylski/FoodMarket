@@ -51,3 +51,5 @@ class BasketItem(models.Model):
 
     class Meta:
         db_table = "basket_item"
+
+
