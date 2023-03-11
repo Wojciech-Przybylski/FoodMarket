@@ -18,12 +18,15 @@
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="/webapp">Food Market</a>
+                <a class="navbar-brand" href="/webapp/home">Food Market</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/webapp">Shop</a></li>
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/webapp/home">Shop</a></li>
                         <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
+                    </ul>
+                    <ul>
+                        Current user: {{ current_user_email }}
                     </ul>
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                                 <div class="text-center">
@@ -52,7 +55,7 @@
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                     {% for product in products %}
                     <div class="col mb-5">
-                        <form action="{% url 'add_item' product.id %}" method="post">
+                        <form action="{% url 'addItem' product.id %}" method="post">
                             {% csrf_token %}
                             <div class="card h-100">
                                 <!-- Product image-->

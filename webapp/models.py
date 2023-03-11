@@ -22,7 +22,8 @@ class Product(models.Model):
 
 
 class User(models.Model):
-    user_name = models.CharField(max_length=30)
+    user_email = models.CharField(max_length=50)
+    user_password = models.CharField(max_length=128)
     created_at = models.DateTimeField()
 
     class Meta:
