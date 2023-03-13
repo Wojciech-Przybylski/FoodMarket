@@ -54,3 +54,12 @@ class BasketItem(models.Model):
         db_table = "basket_item"
 
 
+class Order(models.Model):
+    basket = models.ForeignKey(Basket, on_delete=models.DO_NOTHING)
+    created_at = models.DateTimeField()
+
+    class Meta:
+        db_table = "order"
+
+
+

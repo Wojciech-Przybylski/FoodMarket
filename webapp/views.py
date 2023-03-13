@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from webapp.helpers import get_current_user, get_user_basket
-from webapp.models import Product, BasketItem, User
+from webapp.models import Product, BasketItem, User, Order
 
 
 class LoginPageView(View):
@@ -105,20 +105,37 @@ class BasketPageView(View):
 
         self.init(current_user_email)
 
-        context = {"basket_view": self, "current_user_email": current_user_email}
+        basket_total_quantity = BasketItem.objects.filter(basket=self.basket).aggregate(Sum("quantity"))["quantity__sum"]
+
+        context = {"basket_view": self, "current_user_email": current_user_email, "basket_total_quantity": basket_total_quantity}
         return render(request, self.template, context)
 
-    def post(self, request, id):
+    def post(self, request, id=None):
         current_user_email = request.session.get('current_user_email', None)
 
         user = get_current_user(current_user_email)
         basket = get_user_basket(user)
 
-        quantity_input = request.POST.get("quantity_input")
+        if request.method == "POST" and "add_item" in request.POST:
+            quantity_input = request.POST.get("quantity_input")
+            if quantity_input == "0":
+                return redirect('home')
+            else:
+                BasketItem.objects.create(product=Product.objects.get(id=id), quantity=quantity_input, basket=basket)
 
-        BasketItem.objects.create(product=Product.objects.get(id=id), quantity=quantity_input, basket=basket)
+                basket.expiry_time = datetime.now() + timedelta(minutes=10)
+                basket.save()
 
-        basket.expiry_time = datetime.now() + timedelta(minutes=10)
-        basket.save()
+        if request.method == "POST" and "check_out" in request.POST:
+            basket_items = BasketItem.objects.filter(basket=basket)
+            # Update product stock for each basket item
+            for item in basket_items:
+                item.product.stock_amount -= item.quantity
+                item.product.save()
+
+            Order.objects.create(basket=basket, created_at=datetime.now())
+            basket.basket_status = "completed"
+            basket.save()
 
         return redirect('home')
+

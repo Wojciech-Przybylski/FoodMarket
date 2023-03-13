@@ -25,7 +25,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="/webapp/home">Shop</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
             </ul>
             <ul>
                 Current user: {{ current_user_email }}
@@ -35,7 +34,7 @@
                     <a class="btn btn-outline-dark" href="basket">
                         <i class="bi-cart-fill me-1"></i>
                         Basket
-                        <span class="badge bg-dark text-white ms-1 rounded-pill">{{ basket_view.basket_total_quantity }}</span>
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">{%if basket_total_quantity == None %} 0 {%else%} {{ basket_total_quantity }} {%endif%} </span>
                     </a>
                 </div>
             </div>
@@ -124,6 +123,12 @@
     </tr>
     </tfoot>
 </table>
+<form method="post">
+    {% csrf_token %}
+    <div class="row gx-4 gx-lg-4 row-cols-10 row-cols-md-8 row-cols-xl-6 justify-content-center text-center">
+        <p><input class="btn btn-outline-dark mt-auto" name="check_out" type="submit" value="Check Out"></p>
+    </div>
+</form>
 </body>
 <!-- Footer-->
 <footer class="py-5 bg-dark">
