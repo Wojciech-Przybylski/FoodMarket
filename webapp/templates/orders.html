@@ -25,7 +25,8 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="/webapp/home">Shop</a></li>
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/webapp/orders">Orders</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/webapp/orders">Orders</a>
+                </li>
             </ul>
             <ul>
                 Current user: {{ current_user_email }}
@@ -46,7 +47,7 @@
 <header class="bg-dark py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Your Basket</h1>
+            <h1 class="display-4 fw-bolder">Your Order History</h1>
         </div>
     </div>
 </header>
@@ -95,41 +96,32 @@
         background-color: yellow;
       }
 
+
     </style>
 </head>
 <body>
 <table>
-    <thead>
+  <thead>
     <tr>
-        <th>Name</th>
-        <th>Price Per Unit</th>
-        <th>Quantity</th>
-        <th>Total Price</th>
+      <th>Order Date</th>
+      <th>Product Name</th>
+      <th>Price per Unit</th>
+      <th>Quantity</th>
+      <th>Order Total Price</th>
     </tr>
-    </thead>
-    {% for basket_total in basket_view.basket_totals %}
-    <tbody>
+  </thead>
+  <tbody>
+    {% for order_dto in order_dtos %}
     <tr>
-        <td>{{ basket_total.product__product_name }}</td>
-        <td>£{{ basket_total.product__price|floatformat:2 }}</td>
-        <td>{{ basket_total.total_product_quantity }}</td>
-        <td>£{{ basket_total.total_product_price|floatformat:2 }}</td>
+      <td>{{ order_dto.order_date }}</td>
+      <td>{% for item in order_dto.items %}{{ item.product.product_name }}<br>{% endfor %}</td>
+      <td>{% for item in order_dto.items %}£{{ item.product.get_price|floatformat:2 }}<br>{% endfor %}</td>
+      <td>{% for item in order_dto.items %}{{ item.quantity }}<br>{% endfor %}</td>
+      <td>£{{ order_dto.order_total_price|floatformat:2 }}</td>
     </tr>
-    </tbody>
     {% endfor %}
-    <tfoot>
-    <tr>
-        <td colspan="3" class="total">Total</td>
-        <td class="total">£{{ basket_view.total_price|floatformat:2 }}</td>
-    </tr>
-    </tfoot>
+  </tbody>
 </table>
-<form method="post">
-    {% csrf_token %}
-    <div class="row gx-4 gx-lg-4 row-cols-10 row-cols-md-8 row-cols-xl-6 justify-content-center text-center">
-        <p><input class="btn btn-outline-dark mt-auto" name="check_out" type="submit" value="Check Out"></p>
-    </div>
-</form>
 </body>
 <!-- Footer-->
 <footer class="py-5 bg-dark">
