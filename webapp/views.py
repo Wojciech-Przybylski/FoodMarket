@@ -39,6 +39,7 @@ class LoginPageView(View):
         elif "register" in request.POST:
             return redirect("register")
 
+#TODO when registered set current user as registered
 
 class RegisterPageView(View):
     template = "register.html"
@@ -105,7 +106,7 @@ class OrderView(View):
 
         return render(request, self.template_name, context)
 
-
+#TODO fix adding products over the available quantity
 class BasketPageView(View):
     template = "basket.html"
     url = "/basket"
