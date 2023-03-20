@@ -106,7 +106,7 @@ class OrderView(View):
 
         return render(request, self.template_name, context)
 
-#TODO fix adding products over the available quantity
+
 class BasketPageView(View):
     template = "basket.html"
     url = "/basket"
@@ -128,14 +128,14 @@ class BasketPageView(View):
 
         if "add_item" in request.POST:
             quantity_input = request.POST.get("quantity_input")
+
             if quantity_input == "0":
                 return redirect('home')
             else:
                 basket_mgr.create_basket_item(id, basket, quantity_input)
+                basket_mgr.update_stock_quantity(basket)
 
         if "check_out" in request.POST:
-            # Update product stock for each basket item
-            basket_mgr.update_stock_quantity(basket)
 
             total_price = basket_mgr.get_basket_total_price(user)
             basket_mgr.create_order(basket, total_price)
